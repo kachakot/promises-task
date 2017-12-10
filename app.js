@@ -22,32 +22,31 @@ function append(parent, el) {
 }
 
 fetch(url)
-.then((resp) => resp.json())
-.then(function(data) {
-  let breeds = data.message;
-  let status = data.status;
-  if (status == 'success') {
-    return breeds.map(function(breed) {
-      let option = createNode('option')
-      option.innerHTML = `${breed}`;
-      append(dropdown, option)
-      dropdown.removeAttribute('disabled')
-    })
-  }
-})
-.catch(function(error) {
-  console.log(JSON.stringify(error));
-});
-
-dropdown.addEventListener('change', function() {
-  let breedName = dropdown.options[dropdown.selectedIndex].text
-  fetch(`https://dog.ceo/api/breed/${breedName}/images/random`)
   .then((resp) => resp.json())
-  .then(json => {
-    result.innerHTML = ''
-    result.innerHTML += `<li><img src='${json.message}' alt='${breedName}'></li>`
+  .then(function(data) {
+    const breeds = data.message;
+    const status = data.status;
+    if (status == 'success') {
+      return breeds.map(function(breed) {
+        let option = createNode('option')
+        option.innerHTML = `${breed}`;
+        append(dropdown, option)
+        dropdown.removeAttribute('disabled')
+      })
+    }
   })
   .catch(function(error) {
     console.log(JSON.stringify(error));
   });
-})
+
+dropdown.addEventListener('change', function() {
+  const breedName = dropdown.options[dropdown.selectedIndex].text
+  fetch(`https://dog.ceo/api/breed/${breedName}/images/random`)
+    .then((resp) => resp.json())
+    .then(json => {
+      result.innerHTML = `<li><img src='${json.message}' alt='${breedName}'></li>`
+    })
+    .catch(function(error) {
+      console.log(JSON.stringify(error));
+    });
+  })
